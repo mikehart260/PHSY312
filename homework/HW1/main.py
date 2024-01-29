@@ -1,3 +1,7 @@
+# @file main.py
+# Michael Hart
+# mhart1
+# file that accepts a file and elevation and returns the distance with the closest elevation.
 from numpy import loadtxt as ld
 def get_file():
     return input("filename: ")
