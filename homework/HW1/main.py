@@ -17,7 +17,6 @@ def validate_elevation(elevation):
     except ValueError: print("Elevation should be float.")
     else: return True
     return False
-
 def find_distance(file, desired_elevation):
 
     data = ld(file,skiprows=1,dtype=str,delimiter=',')
@@ -34,6 +33,7 @@ def find_distance(file, desired_elevation):
         idx+=1
     return (float(distance), float(elevation))
 
+# value validation.
 file = get_file()
 while (not validate_file(file)):
     file = get_file()
