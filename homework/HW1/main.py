@@ -3,6 +3,7 @@
 # mhart1
 # file that accepts a file and elevation and returns the distance with the closest elevation.
 from numpy import loadtxt as ld
+
 def get_file():
     return input("filename: ")
 
@@ -11,26 +12,26 @@ def get_elevation():
 
 def validate_file(file):
     try: data = ld(file,skiprows=1,dtype=str,delimiter=',')
-    except: print("File not found.")
+    except: 
+        print("File not found.")
+        return False
     else: return True
-    return False
 
 def validate_elevation(elevation):
     try: float(elevation)
-    except ValueError: print("Elevation should be float.")
+    except ValueError: 
+        print("Elevation should be float.")
+        return False
     else: return True
-    return False
 
 def find_distance(file, desired_elevation):
     data = ld(file,skiprows=1,dtype=str,delimiter=',')
     diff = 1000
-    idx = 0
     for line in data:
         if abs(desired_elevation - float(line[1])) < diff:
             diff = abs(desired_elevation - float(line[1]))
             elevation = line[1]
             distance = line[0]
-        idx+=1
     return (float(distance), float(elevation))
 
 # value validation.
