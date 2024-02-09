@@ -11,6 +11,7 @@ def get_elevation():
     return input("Elevation: ")
 
 def validate_file(file):
+    # checks file exists.
     try: data = ld(file,skiprows=1,dtype=str,delimiter=',')
     except: 
         print("File not found.")
@@ -18,6 +19,7 @@ def validate_file(file):
     else: return True
 
 def validate_elevation(elevation):
+    # checks elevation is float.
     try: float(elevation)
     except ValueError: 
         print("Elevation should be float.")
