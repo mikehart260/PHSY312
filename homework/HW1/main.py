@@ -1,48 +1,40 @@
-# @file main.py
-# Michael Hart
-# mhart1
-# file that accepts a file and elevation and returns the distance with the closest elevation.
-from numpy import loadtxt as ld
+import math
+import numpy as np
+import matplotlib.pyplot as plt
 
-def get_file():
-    return input("filename: ")
+def binomial_coefficient(n,k):
+    # integer division works here.
+    return math.factorial(n)//(math.factorial(k)*math.factorial(n-k))
 
-def get_elevation():
-    return input("Elevation: ")
+def coin_prob(n,k):
+    return binomial_coefficient(n,k)/(2**n)
 
-def validate_file(file):
-    # checks file exists.
-    try: data = ld(file,skiprows=1,dtype=str,delimiter=',')
-    except: 
-        print("File not found.")
-        return False
-    else: return True
+def flip(n):
+    rng = np.random.default_rng()
+    heads = 0
+    for i in range(n):
+        if (rng.random() < 0.5):
+            heads+=1
+    return heads
 
-def validate_elevation(elevation):
-    # checks elevation is float.
-    try: float(elevation)
-    except ValueError: 
-        print("Elevation should be float.")
-        return False
-    else: return True
+NUM_FLIPS = 100
+probs = []
 
-def find_distance(file, desired_elevation):
-    data = ld(file,skiprows=1,dtype=str,delimiter=',')
-    diff = 1000
-    for line in data:
-        if abs(desired_elevation - float(line[1])) < diff:
-            diff = abs(desired_elevation - float(line[1]))
-            elevation = line[1]
-            distance = line[0]
-    return (float(distance), float(elevation))
+print("P = {:.9f}".format(coin_prob(1500,800)))
+count = 0
+for i in range(NUM_FLIPS):
+    x = coin_prob(NUM_FLIPS,i)
+    probs.append(x) # this helps me find the ymax for vline
+    plt.plot(i, x, 'ko')
+    if i == NUM_FLIPS - 1:
+        # set the label for the legend on the last point only
+        plt.plot(i, x, 'ko', label = "prediction")
 
-# value validation.
-file = get_file()
-while (not validate_file(file)):
-    file = get_file()
-desired_elevation = get_elevation()
-while (not validate_elevation(desired_elevation)):
-    desired_elevation = get_elevation()
+actual = flip(NUM_FLIPS)
 
-distance , elevation = find_distance(file,float(desired_elevation))
-print("Distance : {0:.3f} m".format(distance))
+plt.vlines(actual, 0, max(probs),label = f"actual = {actual}")
+plt.legend()
+plt.xlabel("Num of heads")
+plt.ylabel("Probability")
+
+plt.show()
