@@ -23,20 +23,23 @@ def mode(arr):
 
 '''
     CODE TO FIND THE MOST COMMON VELOCITY OF THE CLUSTER.
-
+    # Avg Pos and std dev RA DE -> 66.1 0.7  16.5 .7
+'''
 directions = []
 
 for line in data:
-         if (50.0 <= line[2] <= 82.0 and 6.0 <= line[3] <= 26.0):
+         if (64.7 <= line[2] <= 67.5 and 15.1 <= line[3] <= 17.9):
              dir = vector_dir(1/line[5],1/line[6])
-             directions.append(dir) 
-            
-plt.arrow(line[2],line[3],1/line[5],1/line[6],width=1,head_width = 1)
+             directions.append(dir)
+             #plt.arrow(line[2],line[3],1/line[5],1/line[6],width=1,head_width = 1)
                 
 directions = np.array(directions)
 
-print(mode(np.round(directions))) # MODE was 80
-'''
+# print(np.average(directions))
+# print(np.std(directions))
+# print(mode(np.round(directions))) # MODE was 80
+# print(len(directions))
+# plt.show()
 
 '''
     PLOTTING STARS IN THE CLUSTER TO INCLUDE VS NOT INCLUDE.
@@ -44,38 +47,44 @@ print(mode(np.round(directions))) # MODE was 80
 
     RESULTS: 
 '''
-
+v_std = 2.3
 dirs = []
 count = 0
+# for i in range(100):
+    
+    
+#     print(len(dirs))
+#     dirs = []
+#     rand = np.random.randn(1)
+stars = []
 for line in data:
     RA = line[2]
     DEC = line[3]
-    if(46.1 <= RA <= 86.1 and 0.0 <= DEC <= 32.0):
+    if(50 <= RA <= 80 and 5 <= DEC <= 30):
         dir = vector_dir(1/line[5],1/line[6])
-        if (-90.207 < dir < -61.803): # Two standard deviations
-            print(dir)
+        if (-82.4-(v_std) < dir < -68.6+(v_std)): # Two standard deviations of direction
+            #print(dir)
             plt.arrow(RA,DEC,1/line[5],1/line[6],width=1,head_width = 1)
             dirs.append(dir)
+            stars.append(line[0])
         else:
-            plt.arrow(RA,DEC,1/line[5],1/line[6],width=1,head_width = 1, color='red')            
+            plt.arrow(RA,DEC,1/line[5],1/line[6],width=1,head_width = 1, color='red')
 
-
+print(stars)
 print(f"Number of stars included: {len(dirs)}")
 print(np.average(dirs))
 print(np.std(dirs))
 
-''' -71.2626 -> -80.7486 is one stdev
-    -66.537  -> -85.473 is two stdev
-'''
-
-
-plt.xlabel("East-West")
-plt.ylabel("North-South")
+plt.arrow([], [],[],[], color='blue', label='Included in Cluster')
+plt.arrow([], [],[],[], color='red', label='Not Included in Cluster')
+plt.xlabel("Right Acension")
+plt.ylabel("Declination")
 plt.title("Cluster")
+plt.legend()
 plt.show()
 
-plt.figure()
-plt.hist(dirs)
+# plt.figure()
+# plt.hist(dirs)
 
-plt.show()
+# plt.show()
 
