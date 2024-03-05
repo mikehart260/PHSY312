@@ -29,18 +29,24 @@ For example,
 '''
 P 6.1.2
 
-'''
+
 def shoelace(points):
     # 2D points
     N,z = np.shape(points)
     points = np.append(points, points[0]).reshape(N+1,2)
     print(points)
     # multiply diagonals.
-    a = [prod for ]
-    return 0
+    S1 = np.sum([points[i,0]*points[i+1,1] for i in range(0,N)])
+    S2 = np.sum([points[i+1,0]*points[i,1] for i in range(0,N)])
+    return 0.5*np.abs(S1-S2)
 
-N =4
+N = 4
 shoe = np.array([[0, 1], [1,2], [4,3], [5,6], [9,0]])
-shoelace(shoe)
+print(shoelace(shoe))
+'''
+'''
+P6.2.2
+'''
+
 
 
