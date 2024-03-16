@@ -57,5 +57,3 @@ for shape in (circle, square, triangle, rhombus,ellipse):
 
 plt.show()
 
-
-
