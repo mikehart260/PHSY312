@@ -27,7 +27,7 @@ def rhs_func(time, state, M1, M2):
     C = state[5]
     y2 = state[6]
     D = state[7]
-    
+
     rhs_arr = np.zeros(8)
     
     rhs_arr[0] = A
@@ -55,7 +55,7 @@ vx1 = -1*m2/m1 * vx2 # velocity in x dir of mass 1
 vy1 = -1*m2/m1 * vy2 # velocity in y dir of mass 1
 
 
-sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1 ,xx2, vx2, xy2, vy2], t_eval=t ,args=(m1, m2,))
+sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1 ,xx2, vx2, xy2, vy2], t_eval=t , args=(m1, m2,))
 
 x1 = sol.y[0]
 vx1 = sol.y[1]
@@ -66,7 +66,10 @@ vx2 = sol.y[5]
 y2 = sol.y[6]
 vy2 = sol.y[7]
 
+
+
 sep_distance = [np.sqrt( (x_1 - x_2 )**2 + (y_1 - y_2 )**2) for x_1,x_2,y_1,y_2 in zip(x1,x2,y1,y2)]
+
 #angle = [np.arccos( (x_1*x_2 + y_1*y_2) / ( np.sqrt(x_1**2 + y_1**2) * np.sqrt(x_2**2 + y_2**2) ) )
 #         for x_1,x_2,y_1,y_2 in zip(x1,x2,y1,y2)]
 #r_x = [np.cos(theta)*r for theta,r in zip(angle,sep_distance) ]
@@ -120,8 +123,10 @@ plt.show()
 # kinetic and potential energy plots
 fig2 = plt.figure()
 ax2 = fig2.add_subplot()
-tot_ke = 0.5*m1*(vx1**2+vy1**2)+0.5*m2*np.sqrt(vx2**2+vy2**2)
-tot_pot = -2*G*m1*m2/np.array(sep_distance)
+
+tot_ke = 0.5*m1*(vx1**2+vy1**2)+0.5*m2*(vx2**2+vy2**2)
+tot_pot = -G*m1*m2/np.array(sep_distance)
+
 ax2.plot(t,tot_ke,label='kinetic energy')
 ax2.plot(t,tot_pot,label='potential energy')
 plt.legend()
