@@ -55,7 +55,7 @@ vx1 = -1*m2/m1 * vx2 # velocity in x dir of mass 1
 vy1 = -1*m2/m1 * vy2 # velocity in y dir of mass 1
 
 
-sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1 ,xx2, vx2, xy2, vy2], t_eval=t , args=(m1, m2,))
+sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1 ,xx2, vx2, xy2, vy2], t_eval=t , args=(m1, m2,), method='LSODA')
 
 x1 = sol.y[0]
 vx1 = sol.y[1]

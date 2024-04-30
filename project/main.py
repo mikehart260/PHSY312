@@ -1,72 +1,65 @@
-# project code due 4/24
-# import scipy.constants as constants
-# import scipy.special as special
-# import scipy.integrate as integrate
-# import matplotlib.pyplot as plt
-# import numpy as np
-
-
-
-# # test for my poster
-
-# t = np.linspace(0,10,1000)
-
-
-
-# plt.plot(t,response(t,intensity,freq,2*collision), label='response')
-# plt.plot(t, np.exp(-t*2*collision), ls='dashed', label='decay')
-# plt.title("Sample MRF")
-# plt.xlabel("Time")
-# plt.ylabel("Intensity A.u.")
-# plt.legend()
-# plt.show()
-
 import numpy as np
+import scipy.integrate as sci
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib.animation import FuncAnimation
+# project code due 4/24
 
+L = 5
+t0 = 0
+tf = 5
+n_points = 50
+t_points = 1000
 
+dx = L/n_points
+dt = (tf - t0)/t_points
 
-# Define the functions to convolve
-def f(x):
-    return 2*np.exp(-x**2)
+# wavespeed
+C = 3*np.ones((n_points,n_points))
 
-def g(x):
-    return 2*np.exp(-(x+1)**2)  
+# set up initial conditions.
+U_0 = np.ones((n_points,n_points))
 
-intensity = 1
-freq = 2*np.pi
-collision = 0.5
+for j in range(n_points):
+    for k in range(n_points):
+        if j == n_points-1 or k == n_points-1 or j == 0 or k == 0:
+             U_0[j][k] = 0
 
-def response(t):
-    return intensity*np.exp(t*(1j*freq - 0.5*collision))
+# initialize U for n+1 and U for n-1
+U_prev = U_0
+U_1 = np.zeros_like(U_0)
 
-# Define the convolution function
-def convolution(f, g, h, x):
-    result = np.convolve(f(x), g(x), h(x) ,mode='same') * (x[1] - x[0]) # Scale by delta_x
-    return result
+data = np.zeros((t_points, n_points, n_points))
 
-# Define the range and step size for x
-x = np.linspace(-5, 5, 1000)
+# find U for n
+for t in range(t_points):
+    for j in range(1,n_points-1):
+        for k in range(1,n_points-1):
+            U_1[j][k] = (dt/dx)**2 * (C[j][k])**2 * (U_0[j+1][k] - 4*U_0[j][k] + 
+                        U_0[j-1][k] + U_0[j][k+1] + U_0[j][k-1]) + 2*U_0[j][k] - U_prev[j][k]
+    data[t] = U_1
+    U_prev = U_0.copy() 
+    U_0 = U_1.copy() 
+    # U_1 = np.zeros_like(U_0)
 
-# Compute the convolution of f and g
-conv_result = convolution(f, response, g ,x)
+num_frames = t_points
 
-# Plot the original functions and the convolution
-plt.figure(figsize=(10, 6))
+# plotting initial conditions
+X, Y = np.meshgrid(np.linspace(0,L,n_points), np.linspace(0,L,n_points))
 
-plt.subplot(3, 1, 1)
-plt.plot(x, f(x), label='f(x) = exp(-x^2)')
-plt.legend()
-plt.title('Original Functions')
+fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
+ax.plot_surface(X, Y, data[-1])
 
-plt.subplot(3, 1, 2)
-plt.plot(x, response(x), label='response(x)')
-plt.legend()
+# Function to update the plot for each frame
+# def update(frame):
+#     ax.clear()
+#     ax.set_zlim(-10, 10)  # Adjust Z limit if necessary
+#     ax.set_title(f'Time Frame: {frame + 1}/{num_frames}')
+#     surf = ax.plot_surface(X, Y, data[frame], cmap='viridis')
+#     return surf,
 
-plt.subplot(3, 1, 3)
-plt.plot(x, conv_result, label='f * g (Convolution)')
-plt.legend()
+# # Create animation
+# ani = FuncAnimation(fig, update, frames=num_frames, blit=True)
 
-plt.tight_layout()
+# Show the animation
 plt.show()
- 
