@@ -4,6 +4,9 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import matplotlib as mpl
 
+
+methods = ['RK45','LSODA']
+method = methods[0]
 # constants 
 G = 6.67e-11 # N m^2/kg^2
 au = 1.5e11 # meters
@@ -72,20 +75,38 @@ m3 = sun
 
 # inital conditions
 
+# GOOD Conditions
+# xx2 = 1.5*au # x position of mass 2
+# xy2 = au # y position of mass 2
+# xz2 = au # z position of mass 2
+# vx2 = 5000 # velocity in x dir of mass 2
+# vy2 =  0 # velocity in y dir of mass 2
+# vz2 = 0 # vel in z dir of mass 3
+
+# xx1 = -au # x position of mass 1
+# xy1 = -1.5*au # y position of mass 1
+# xz1 = 0 # z position of mass 1
+# vx1 = -10000 # velocity in x dir of mass 1
+# vy1 = 0 # velocity in y dir of mass 1
+# vz1 = 0 # vel in z dir of mass 1
+
+######################################
 
 xx2 = 1.5*au # x position of mass 2
 xy2 = au # y position of mass 2
 xz2 = au # z position of mass 2
-vx2 = 5000 # velocity in x dir of mass 2
+vx2 = 0 # velocity in x dir of mass 2
 vy2 =  0 # velocity in y dir of mass 2
 vz2 = 0 # vel in z dir of mass 3
 
 xx1 = -au # x position of mass 1
 xy1 = -1.5*au # y position of mass 1
 xz1 = 0 # z position of mass 1
-vx1 = -10000 # velocity in x dir of mass 1
+vx1 = 0 # velocity in x dir of mass 1
 vy1 = 0 # velocity in y dir of mass 1
 vz1 = 0 # vel in z dir of mass 1
+
+
 
 xx3 = - (m1*xx1 + m2*xx2) / m3 # x pos of mass 3
 xy3 = - (m1*xy1 + m2*xy2) / m3 # y pos of mass 3
@@ -95,7 +116,7 @@ vy3 = - (m1*vy1 + m2*vy2) / m3 # vel in y dir of mass 3
 vz3 = - (m1*vz1 + m2*vy2) / m3 # vel in z dir of mass 3
 
 
-sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1, xz1, vz1, xx2, vx2, xy2, vy2, xz2, vz2, xx3, vx3, xy3, vy3, xz3, vz3], t_eval=t , args=(m1, m2, m3,))
+sol = sci.solve_ivp(rhs_func, t[[0, -1]], [xx1, vx1, xy1, vy1, xz1, vz1, xx2, vx2, xy2, vy2, xz2, vz2, xx3, vx3, xy3, vy3, xz3, vz3], t_eval=t , args=(m1, m2, m3,), method=method)
 
 xpos_1 = sol.y[0]
 xvel_1 = sol.y[1]
@@ -185,33 +206,33 @@ def animate(i):
 print(len(xpos_1))
 
 ani = animation.FuncAnimation(
-    fig, animate, len(xpos_1), interval =10 ,blit=True)
+    fig, animate, len(xpos_1), interval = 10 ,blit=True)
 
 plt.show()
 
-# # conic shapes
-# c = au/2
-# e = 0.5
-# theta_0 = np.pi
-# theta = np.linspace(0, 2*np.pi, 60)
-# x = np.cos(theta)*c/(1-e*np.cos(theta-theta_0))
-# y = np.sin(theta)*c/(1-e*np.cos(theta-theta_0))
-# plt.plot(x,y,label='conic shape',c='g')
-# plt.legend()
-# plt.show()
+# Total Energy
+v1 = np.sqrt(xvel_1**2 + yvel_1**2 + zvel_1**2)
+v2 = np.sqrt(xvel_2**2 + yvel_2**2 + zvel_2**2)
+v3 = np.sqrt(xvel_3**2 + yvel_3**2 + zvel_3**2)
 
-# # kinetic and potential energy plots
-# fig2 = plt.figure()
-# ax2 = fig2.add_subplot()
+sep_1_2 = np.sqrt((xpos_2-xpos_1)**2 + (ypos_2-ypos_1)**2 + (zpos_2-zpos_1)**2)
+sep_1_3 = np.sqrt((xpos_1-xpos_3)**2 + (ypos_1-ypos_3)**2 + (zpos_1-zpos_3)**2)
+sep_2_3 = np.sqrt((xpos_3-xpos_2)**2 + (ypos_3-ypos_2)**2 + (zpos_3-zpos_2)**2)
 
-# tot_ke = 0.5*m1*(vx1**2+vy1**2)+0.5*m2*(vx2**2+vy2**2)
-# tot_pot = -G*m1*m2/np.array(sep_distance)
+E_tot = 0.5*(m1*v1**2 + m2*v2**2 + m3*v3**2) - G*(m1*m2/sep_1_2 + m1*m3/sep_1_3 + m2*m3/sep_2_3)
+print(sol.t[-1]/yr)
+plt.plot(sol.t,E_tot)
+plt.ylim(-5e40,0)
+plt.xlabel("time (yr)")
+plt.xticks(yr*np.arange(0,t_stop/yr,10),np.arange(0,t_stop/yr,10))
+plt.ylabel("Energy")
+plt.title("Total energy vs time")
+plt.show()
 
-# ax2.plot(t,tot_ke,label='kinetic energy')
-# ax2.plot(t,tot_pot,label='potential energy')
-# plt.legend()
-# plt.show()
-
-# # total energy plots
-# plt.plot(t,tot_ke+tot_pot)
-# plt.show()
+# Total Momentum
+P_tot = m1*v1 + m2*v2 + m3*v3
+plt.plot(sol.t, P_tot)
+plt.xlabel("time (yr)")
+plt.xticks(yr*np.arange(0,t_stop/yr,10),np.arange(0,t_stop/yr,10))
+plt.title("momentum")
+plt.show()
