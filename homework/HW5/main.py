@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import numpy.polynomial as poly
 import statsmodels.api as sm
 # 'HIP', 'Vmag', 'RA', 'DE', 'Plx', 'pmRA', 'pmDE', 'e_Plx', 'BV'
-data = np.genfromtxt("/Users/michaelhart/repos/PHSY312/homework/HW5/Hipparcos_Plx_20_25-1.dat", names = True)
+file_path = 'Hipparcos_Plx_20_25-1.dat'
+data = np.genfromtxt(file_path, names = True)
 
 
 def temp(BV):
