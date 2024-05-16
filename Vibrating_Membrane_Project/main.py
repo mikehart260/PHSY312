@@ -3,13 +3,25 @@ import scipy.integrate as sci
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.animation import FuncAnimation
-# project code due 4/24
+
+def intriangle(j,k,n):
+    if (k > n//2 - j and k < n//2 + j):
+        return True
+    else:
+        return False
+
+def triangle_bc(j,k,n):
+    if (k <= n//2 - j or k >= n//2 +j):
+        return True
+    else:
+        return False
 
 L = 1
 t0 = 0
-tf = 10
+tf = 60
 n_points = 20
-t_points = 100
+t_points = 400
+
 
 dx = L/n_points # grid spacing
 dt = (tf - t0)/t_points
@@ -19,7 +31,7 @@ wavespeed_m_s = 0.1 # wavespeed
 # constant wavespeed grid
 C = wavespeed_m_s*np.ones((n_points,n_points))
 
-####### SET UP INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
+####### SET UP UNIFORM INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
 # U_0 = np.ones((n_points, n_points))
 
 # for j in range(n_points):
@@ -30,11 +42,20 @@ C = wavespeed_m_s*np.ones((n_points,n_points))
 
 ####### SET UP DELTA FUNCTION INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
 U_0 = np.zeros((n_points, n_points))
-x_coordinate = 5 # x coordinate for delta function in terms of L
-y_coordinate = 5 # y coordinate for delta function in terms of L
-delta_magnitude = 2
+x_coordinate = 9 # x coordinate for delta function in terms of L
+y_coordinate = 9 # y coordinate for delta function in terms of L
+delta_magnitude = 1.5
 
 U_0[x_coordinate][y_coordinate] = -delta_magnitude
+##################################################################
+
+######## SET UP UNIFORM INITIAL CONDITION WITH TRIANGLE BOUNDARY CONDITIONS ##############
+# U_0 = np.ones((n_points, n_points))
+# for j in range(0, n_points):
+#     for k in range(0, n_points):
+#         if (triangle_bc(j,k,n_points)):
+#             U_0[j][k] = 0
+##################################################################################
 
 # initialize U for n+1 and U for n-1
 U_prev = U_0
@@ -50,9 +71,22 @@ for t in range(t_points):
     data[t] = U_1
     U_prev = U_0.copy() 
     U_0 = U_1.copy() 
-########################################################################
+##############################################################################
 
-####################### PLOT FINAL SURFACE #############################
+######## CENTRAL DIFFERENCE BASED ON TRIANGLE BOUNDARY CONDITIONS ############
+# for t in range(t_points):
+#     for j in range(0,n_points-1):
+#         for k in range(0,n_points-1):
+#             if (intriangle(j,k,n_points)):        
+#                 U_1[j][k] = (dt/dx)**2 * (C[j][k])**2 * (U_0[j+1][k] - 4*U_0[j][k] + 
+#                         U_0[j-1][k] + U_0[j][k+1] + U_0[j][k-1]) + 2*U_0[j][k] - U_prev[j][k]
+#     data[t] = U_1
+#     U_prev = U_0.copy() 
+#     U_0 = U_1.copy() 
+##############################################################################
+
+
+####################### PLOT #############################
 X, Y = np.meshgrid(np.linspace(0,L,n_points), np.linspace(0,L,n_points))
 
 colortuple = ('y', 'b')
@@ -79,7 +113,7 @@ def update(frame):
     return surf,
 
 # Create animation
-ani = FuncAnimation(fig, update, frames=num_frames, interval=50)
+ani = FuncAnimation(fig, update, frames=num_frames, interval=10)
 ###################################################################
 
 plt.show()
