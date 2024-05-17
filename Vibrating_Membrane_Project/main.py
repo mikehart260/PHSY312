@@ -32,21 +32,21 @@ wavespeed_m_s = 0.1 # wavespeed
 C = wavespeed_m_s*np.ones((n_points,n_points))
 
 ####### SET UP UNIFORM INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
-# U_0 = np.ones((n_points, n_points))
+U_0 = np.ones((n_points, n_points))
 
-# for j in range(n_points):
-#     for k in range(n_points):
-#         if j == n_points-1 or k == n_points-1 or j == 0 or k == 0:
-#              U_0[j][k] = 0
+for j in range(n_points):
+    for k in range(n_points):
+        if j == n_points-1 or k == n_points-1 or j == 0 or k == 0:
+             U_0[j][k] = 0
 ##################################################################
 
 ####### SET UP DELTA FUNCTION INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
-U_0 = np.zeros((n_points, n_points))
-x_coordinate = 9 # x coordinate for delta function in terms of L
-y_coordinate = 9 # y coordinate for delta function in terms of L
-delta_magnitude = 1.5
+# U_0 = np.zeros((n_points, n_points))
+# x_coordinate = 9 # x coordinate for delta function in terms of L
+# y_coordinate = 9 # y coordinate for delta function in terms of L
+# delta_magnitude = 1.5
 
-U_0[x_coordinate][y_coordinate] = -delta_magnitude
+# U_0[x_coordinate][y_coordinate] = -delta_magnitude
 ##################################################################
 
 ######## SET UP UNIFORM INITIAL CONDITION WITH TRIANGLE BOUNDARY CONDITIONS ##############
