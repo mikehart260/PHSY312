@@ -16,11 +16,17 @@ def triangle_bc(j,k,n):
     else:
         return False
 
+def initial_condition_sin(i, j):
+    x = i*dx
+    y = j*dx
+    return np.sin(3*np.pi*y)
+
+
 L = 1
 t0 = 0
-tf = 60
+tf = 100
 n_points = 20
-t_points = 400
+t_points = 5000
 
 
 dx = L/n_points # grid spacing
@@ -32,13 +38,24 @@ wavespeed_m_s = 0.1 # wavespeed
 C = wavespeed_m_s*np.ones((n_points,n_points))
 
 ####### SET UP UNIFORM INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
+# U_0 = np.ones((n_points, n_points))
+
+# for j in range(n_points):
+#     for k in range(n_points):
+#         if j == n_points-1 or k == n_points-1 or j == 0 or k == 0:
+#              U_0[j][k] = 0
+##################################################################
+
+####### SET UP SIN(X) INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
 U_0 = np.ones((n_points, n_points))
 
-for j in range(n_points):
-    for k in range(n_points):
-        if j == n_points-1 or k == n_points-1 or j == 0 or k == 0:
-             U_0[j][k] = 0
-##################################################################
+for j in range(1,n_points-1):
+    for k in range(1,n_points-1):
+        U_0[j][k] = initial_condition_sin(j,k)
+
+plt.pcolormesh(U_0)
+plt.colorbar()
+plt.show()
 
 ####### SET UP DELTA FUNCTION INITIAL STATE WITH SQUARE BOUNDARY CONDITIONS ######
 # U_0 = np.zeros((n_points, n_points))
