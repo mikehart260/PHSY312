@@ -8,4 +8,4 @@ If the animation is acting funny, try adjusting the spatial and temporal resolut
 This program mainly handles square boundary conditions, though I did experiment with funky BC's like triangle. 
 Initial conditions include delta function in center of membrane, normal mode excitation, uniform displacement. 
 
-The simulation is created using the [central difference method][https://en.wikipedia.org/wiki/Finite_difference] of appoximating partial derivatives.  
+The simulation is created using the [central difference method](https://en.wikipedia.org/wiki/Finite_difference) of appoximating partial derivatives.  
