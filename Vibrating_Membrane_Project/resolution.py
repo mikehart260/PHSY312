@@ -7,8 +7,8 @@ from matplotlib.animation import FuncAnimation
 L = 1
 t0 = 0
 tf = 100
-n_points = 100
-t_points = 1000
+n_points = 50
+t_points = 500
 
 dx = L/n_points # grid spacing
 dt = (tf - t0)/t_points
@@ -68,7 +68,7 @@ for t in range(t_points):
 
 fig, ax = plt.subplots(subplot_kw={"projection": "3d"})
 ########################## ANIMATION ###################################
-num_frames = t_points
+num_frames = 500
 # Function to update the plot for each frame
 def update(frame):
     ax.clear()

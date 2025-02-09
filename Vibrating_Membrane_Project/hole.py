@@ -7,7 +7,7 @@ from matplotlib.animation import FuncAnimation
 L = 1
 t0 = 0
 tf = 100
-n_points = 20
+n_points = 21
 t_points = 1000
 
 dx = L/n_points # grid spacing
@@ -21,7 +21,7 @@ C = wavespeed_m_s*np.ones((n_points,n_points))
 U_0 = np.ones((n_points, n_points))
 
 # Add a "hole" in the initial conditions
-center = 5
+center = 10
 U_0[center][center+1] = 0
 U_0[center+1][center]= 0
 U_0[center+1][center+1] =0
@@ -49,7 +49,7 @@ for t in range(t_points):
                         U_0[j-1][k] + U_0[j][k+1] + U_0[j][k-1]) + 2*U_0[j][k] - U_prev[j][k]
     data[t] = U_1
     U_prev = U_0.copy() 
-    U_0 = U_1.copy() 
+    U_0 = U_1.copy()
 ##############################################################################
 
 ####################### PLOT #############################

@@ -16,9 +16,9 @@ L = 15
 t0 = 0
 tf = 5
 n_points = 50
-t_points = 50
-n = 1
-m = 3
+t_points = 150
+n = 10
+m = 1
 
 dx = L/n_points # grid spacing 0.1m
 dt = (tf - t0)/t_points
@@ -59,7 +59,7 @@ def update(frame):
     return surf,
 
 # Create animation
-ani = FuncAnimation(fig, update, frames=num_frames, interval=10)
+ani = FuncAnimation(fig, update, frames=num_frames, interval=50)
 ###################################################################
 
 plt.show()

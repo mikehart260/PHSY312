@@ -89,7 +89,7 @@ for t in range(t_points):
     for i in range(1, n_points-1):
         for j in range(1, n_points-1):
             u = func(i, j, t, 1, 1)
-            U_1[i][j] = u
+            U_1[i][j] = u*5e16
     data[t] = U_1
 
 ####################### PLOT #############################
